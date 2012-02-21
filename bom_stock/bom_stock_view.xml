@@ -5,7 +5,7 @@
             <field name="name">product.bom.stock.value.qty.form.inherit</field>
             <field name="model">product.product</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="stock_available_immediately.view_normal_stock_active_qty_form"/>
+            <field name="inherit_id" ref="c2c_immediately_usable.view_normal_stock_active_qty_form"/>
             <field name="arch" type="xml">
                 <field name="immediately_usable_qty" position="after">
                     <field name="bom_stock" />
@@ -20,11 +20,11 @@
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
                 <page string="Configuration" position="inside">
-                    <separator string="Stock - Various" colspan="4"/>
                     <field name="ref_stock" />
                 </page>   
             </field>
         </record>
-
+        
+        
     </data>
 </openerp>

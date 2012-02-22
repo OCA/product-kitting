@@ -25,11 +25,11 @@
     'description':
      """Compute the BOM  stock Value. BoM Stock Value are computed by:
       "(Reference stock" of "Product" + How much could I produce of That "Product" according to the component's "Reference Stock)"
-      "This reference stock can be chosen by company through a selection field and can be one of the available stock quantity computed in the system : Available stock, Virtual stock, immediately_usable stock (from c2c_immediately_usable)".""" 
+      "This reference stock can be chosen by company through a selection field and can be one of the available stock quantity computed in the system : Available stock, Virtual stock, immediately_usable stock (from stock_available_immediately)".""" 
     ,
     'author': 'Camptocamp',
     'website': 'http://www.camptocamp.com',
-    'depends': ['stock', 'c2c_immediately_usable'], #TODO adapt dependancy
+    'depends': ['stock', 'stock_available_immediately'],
     'init_xml': [],
     'update_xml': ['bom_stock_view.xml'],
     'demo_xml': [],

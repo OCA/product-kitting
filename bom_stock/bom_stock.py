@@ -51,7 +51,8 @@ class product_product(orm.Model):
 
     def _compute_bom_stock(self, cr, uid, product,
                            quantities, company, context=None):
-        bom_obj = self.pool.get('mrp.bom')
+        bom_obj = self.pool['mrp.bom']
+        uom_obj = self.pool['product.uom']
         mapping = self._bom_stock_mapping(cr, uid, context=context)
         stock_field = mapping[company.ref_stock]
 
@@ -69,17 +70,17 @@ class product_product(orm.Model):
                 # get the minimal number of items we can produce with them
                 for line in bom.bom_lines:
                     prod_min_quantity = 0.0
-                    bom_qty = line.product_id[stock_field]
-
+                    bom_qty = line.product_id[stock_field] # expressed in product UOM
                     # the reference stock of the component must be greater
                     # than the quantity of components required to
                     # build the bom
-                    if bom_qty >= line.product_qty:
-                        prod_min_quantity = (
-                            (bom_qty *
-                             line.product_id.uom_id.factor /
-                             line.product_uom.factor) /
-                            line.product_qty)  # line.product_qty is always > 0
+                    line_product_qty = uom_obj._compute_qty_obj(cr, uid,
+                                                                line.product_uom,
+                                                                line.product_qty,
+                                                                line.product_id.uom_id,
+                                                                context=context)
+                    if bom_qty >= line_product_qty:
+                        prod_min_quantity = bom_qty / line_product_qty  # line.product_qty is always > 0
                     else:
                         # if one product has not enough stock,
                         # we do not need to compute next lines
@@ -87,11 +88,14 @@ class product_product(orm.Model):
                         stop_compute_bom = True
 
                     prod_min_quantities.append(prod_min_quantity)
-
                     if stop_compute_bom:
                         break
-
-            product_qty += min(prod_min_quantities) * (bom.product_qty * bom.product_id.uom_id.factor / bom.product_uom.factor)
+            produced_qty = uom_obj._compute_qty_obj(cr, uid,
+                                                    bom.product_uom,
+                                                    bom.product_qty,
+                                                    bom.product_id.uom_id,
+                                                    context=context)
+            product_qty += min(prod_min_quantities) * produced_qty
         return product_qty
 
     def _product_available(self, cr, uid, ids, field_names=None,
@@ -99,8 +103,8 @@ class product_product(orm.Model):
         # We need available, virtual or immediately usable
         # quantity which is selected from company to compute Bom stock Value
         # so we add them in the calculation.
-        user_obj = self.pool.get('res.users')
-        comp_obj = self.pool.get('res.company')
+        user_obj = self.pool['res.users']
+        comp_obj = self.pool['res.company']
         if 'bom_stock' in field_names:
             field_names.append('qty_available')
             field_names.append('immediately_usable_qty')

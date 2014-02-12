@@ -9,10 +9,10 @@
             <field name="arch" type="xml">
                 <field name="immediately_usable_qty" position="after">
                     <field name="bom_stock" />
-                </field>   
+                </field>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_reference_stock_company_form">
             <field name="name">res.company.reference.stock.form.inherit</field>
             <field name="model">res.company</field>
@@ -22,7 +22,7 @@
                 <page string="Configuration" position="inside">
                     <separator string="Stock - Various" colspan="4"/>
                     <field name="ref_stock" />
-                </page>   
+                </page>
             </field>
         </record>
 

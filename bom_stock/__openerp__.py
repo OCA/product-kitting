@@ -34,6 +34,7 @@
     'author': 'Camptocamp',
     'website': 'http://www.camptocamp.com',
     'depends': ['stock',
+                'mrp',
                 'stock_available_immediately',
                 ],
     'data': ['bom_stock_view.xml'],

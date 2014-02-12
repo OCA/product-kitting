@@ -47,8 +47,8 @@
     move_ids = [ref("move1"), ref("move2")]
     self.action_done(cr, uid, move_ids)
 -
-  I check the stock level of half pipes
+  I check the stock level of half pipes : should be 1 (existing stock) + 2*number of Pipes
 -
   !assert {model: product.product, id: product2}:
-    - bom_stock == 2.5
+    - bom_stock == 7
 

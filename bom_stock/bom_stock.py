@@ -91,7 +91,7 @@ class product_product(orm.Model):
                     if stop_compute_bom:
                         break
 
-            product_qty += min(prod_min_quantities)
+            product_qty += min(prod_min_quantities) / (bom.product_qty * bom.product_id.uom_id.factor / bom.product_uom.factor)
         return product_qty
 
     def _product_available(self, cr, uid, ids, field_names=None,

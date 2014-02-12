@@ -39,6 +39,8 @@
                 ],
     'data': ['bom_stock_view.xml'],
     'demo': [],
+    'test': ['tests/test_bom_stock.yml',
+             ],
     'installable': True,
     'active': False,
 }

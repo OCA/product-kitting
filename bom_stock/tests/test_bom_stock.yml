@@ -1,0 +1,54 @@
+-
+  I create a product "Pipe"
+-
+  !record {model: product.product, id: product1}:
+    name: Pipe
+    type: product
+    supply_method: buy
+-
+  I create a product "Half Pipe"
+-
+  !record {model: product.product, id: product2}:
+    name: Half Pipe
+    type: product
+    supply_method: produce
+-
+  I explain how to build Half Pipes
+-
+  !record {model: mrp.bom, id: bom_prod2}:
+    name: half pipe
+    product_id: product2
+    product_qty: 2
+    product_uom: product.product_uom_unit
+    bom_lines:
+      - product_id: product1
+        product_qty: 1
+        product_uom: product.product_uom_unit
+-
+  I create stock of Pipes
+-
+  !record {model: stock.move, id: move1}:
+    product_id: product1
+    product_qty: 3
+    product_uom: product.product_uom_unit
+    location_id: stock.location_inventory
+    location_dest_id: stock.stock_location_stock
+-
+  I create stock of Half Pipes
+-
+  !record {model: stock.move, id: move2}:
+    product_id: product2
+    product_qty: 1
+    product_uom: product.product_uom_unit
+    location_id: stock.location_inventory
+    location_dest_id: stock.stock_location_stock
+-
+  !python {model: stock.move}: |
+    move_ids = [ref("move1"), ref("move2")]
+    self.action_done(cr, uid, move_ids)
+-
+  I check the stock level of half pipes
+-
+  !assert {model: product.product, id: product2}:
+    - bom_stock == 2.5
+

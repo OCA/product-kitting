@@ -18,6 +18,6 @@
 #
 ##############################################################################
 
-import bom_stock
+from . import bom_stock
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

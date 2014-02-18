@@ -20,7 +20,7 @@
 
 {
     'name': 'Compute Stock from BoM',
-    'version': '5.0',
+    'version': '5.0.1',
     'category': 'Generic Modules/Others',
     'description':
      """Compute the BOM  stock Value. BoM Stock Value are computed by:

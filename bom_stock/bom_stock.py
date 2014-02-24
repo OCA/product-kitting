@@ -55,7 +55,7 @@ class product_bom_stock_value(osv.osv):
     def _compute_bom_stock(self, cr, uid, product,
                            quantities, company, context=None):
         bom_obj = self.pool.get('mrp.bom')
-
+        uom_obj = self.pool.get('product.uom')
         mapping = self._bom_stock_mapping(cr, uid, context=context)
         stock_field = mapping[company.ref_stock]
 
@@ -73,17 +73,17 @@ class product_bom_stock_value(osv.osv):
                 # get the minimal number of items we can produce with them
                 for line in bom.bom_lines:
                     prod_min_quantity = 0.0
-                    bom_qty = line.product_id[stock_field]
-
+                    bom_qty = line.product_id[stock_field] # expressed in product UOM
                     # the reference stock of the component must be greater
                     # than the quantity of components required to
                     # build the bom
-                    if bom_qty >= line.product_qty:
-                        prod_min_quantity = (
-                            (bom_qty *
-                             line.product_id.uom_id.factor /
-                             line.product_uom.factor) /
-                            line.product_qty)  # line.product_qty is always > 0
+                    line_product_qty = uom_obj._compute_qty_obj(cr, uid,
+                                                                line.product_uom,
+                                                                line.product_qty,
+                                                                line.product_id.uom_id,
+                                                                context=context)
+                    if bom_qty >= line_product_qty:
+                        prod_min_quantity = bom_qty / line_product_qty  # line.product_qty is always > 0
                     else:
                         # if one product has not enough stock,
                         # we do not need to compute next lines
@@ -91,11 +91,14 @@ class product_bom_stock_value(osv.osv):
                         stop_compute_bom = True
 
                     prod_min_quantities.append(prod_min_quantity)
-
                     if stop_compute_bom:
                         break
-
-            product_qty += min(prod_min_quantities)
+            produced_qty = uom_obj._compute_qty_obj(cr, uid,
+                                                    bom.product_uom,
+                                                    bom.product_qty,
+                                                    bom.product_id.uom_id,
+                                                    context=context)
+            product_qty += min(prod_min_quantities) * produced_qty
         return product_qty
 
     def _product_available(self, cr, uid, ids, field_names=None,

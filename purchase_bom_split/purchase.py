@@ -116,7 +116,7 @@ class purchase_order(Model):
                     move_id = move_obj.create(cr, uid, vals, context=context)
                     new_move_ids.append(move_id)
             if move_dest_id:
-                line.move_dest_id.write({'location_id': move_dest_id})
+                line.move_dest_id.write({'location_id': move_dest_id.location_id.id})
 
         move_obj.action_confirm(cr, uid, new_move_ids)
         move_obj.force_assign(cr, uid, new_move_ids)

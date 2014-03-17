@@ -51,9 +51,8 @@
     'author': 'Camptocamp',
     'website': 'http://www.camptocamp.com',
     'depends': ['sale', 'bom_split'],
-    'init_xml': [],
-    'update_xml': [],
-    'demo_xml': [],
+    'data': [],
+    'demo': [],
     'installable': True,
     'auto_install': False,
 }

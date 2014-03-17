@@ -30,9 +30,8 @@ Used in sale_bom_split and purchase_bom_split.
     'author': 'Camptocamp',
     'website': 'http://www.camptocamp.com',
     'depends': ['mrp'],
-    'init_xml': [],
-    'update_xml': [],
-    'demo_xml': [],
+    'data': [],
+    'demo': ['bom_split_demo.yml'],
     'installable': True,
     'autoinstall': False,
 }

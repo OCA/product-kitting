@@ -1,0 +1,43 @@
+-
+  I create a product "Drilling Kit"
+-
+  !record {model: product.product, id: product1}:
+    name: Drilling Kit
+    type: product
+    procure_method: make_to_order
+    supply_method: produce
+    uom_id: product.product_uom_unit
+-
+  I create a product "Driller"
+-
+  !record {model: product.product, id: product2}:
+    name: Driller
+    type: product
+    procure_method: make_to_order
+    supply_method: buy
+    uom_id: product.product_uom_unit
+-
+  I create a product "Drill bit"
+-
+  !record {model: product.product, id: product3}:
+    name: Drill bit
+    type: product
+    procure_method: make_to_order
+    supply_method: buy
+    uom_id: product.product_uom_unit
+-
+  I explain how to build Driller Kits
+-
+  !record {model: mrp.bom, id: bom_prod1}:
+    name: half pipe
+    product_id: product1
+    product_qty: 1
+    product_uom: product.product_uom_dozen
+    type: phantom
+    bom_lines:
+      - product_id: product2
+        product_qty: 1
+        product_uom: product.product_uom_dozen
+      - product_id: product3
+        product_qty: 48
+        product_uom: product.product_uom_unit

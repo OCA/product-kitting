@@ -50,9 +50,9 @@
     'author': 'Camptocamp',
     'website': 'http://www.camptocamp.com',
     'depends': ['bom_split', 'purchase'],
-    'init_xml': [],
-    'update_xml': [],
-    'demo_xml': [],
+    'data': [],
+    'demo': [],
+    'test': ['tests/test_purchase_bom_split.yml'],
     'installable': True,
     'auto_install': False,
 }

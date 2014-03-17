@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-import netsvc
-from osv.orm import Model
+from openerp import netsvc
+from openerp.osv.orm import Model
 
 
 class sale_order(Model):

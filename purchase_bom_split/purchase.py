@@ -64,7 +64,7 @@ class purchase_order(Model):
         bom_obj = self.pool.get('mrp.bom')
         picking_obj = self.pool.get('stock.picking')
         product_obj = self.pool.get('product.product')
-
+        uom_obj = self.pool['product.uom']
         bom_order_lines = []
         normal_order_lines = order_lines[:]
         for line in order_lines:
@@ -92,9 +92,9 @@ class purchase_order(Model):
 
         new_move_ids = []
         for line, bom in bom_order_lines:
-            factor = line.product_qty * line.product_uom.factor / bom.product_uom.factor
+            factor = uom_obj._compute_qty_obj(cr, uid, line.product_uom, line.product_qty, bom.product_uom)
             bom_components = bom_obj.bom_split(
-                cr, uid, bom, factor / bom.product_qty)
+                cr, uid, bom, factor)
 
             move_dest_id = None
             for component in bom_components:

@@ -21,7 +21,7 @@
 
 {
     'name': 'Sales BoMs Split',
-    'version': '1.0',
+    'version': '1.0.1',
     'category': 'Generic Modules/Sales & Purchases',
     'description': """
      This module splits the products into the related packing according to their
@@ -51,9 +51,10 @@
     'author': 'Camptocamp',
     'website': 'http://www.camptocamp.com',
     'depends': ['sale', 'bom_split'],
-    'init_xml': [],
-    'update_xml': [],
-    'demo_xml': [],
+    'data': [],
+    'demo': [],
+    'test': ['tests/test_sale_bom_split.yml',
+             ],
     'installable': True,
     'auto_install': False,
 }

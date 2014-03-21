@@ -80,6 +80,7 @@ class sale_order(Model):
         picking_obj = self.pool.get('stock.picking')
         product_obj = self.pool.get('product.product')
         procurement_obj = self.pool.get('procurement.order')
+        uom_obj = self.pool['product.uom']
 
         bom_order_lines = []
         normal_order_lines = order_lines[:]
@@ -109,9 +110,10 @@ class sale_order(Model):
 
         proc_ids = []
         for line, bom in bom_order_lines:
-            factor = line.product_uom_qty * line.product_uom.factor / bom.product_uom.factor
+            factor = uom_obj._compute_qty_obj(cr, uid, line.product_uom, line.product_uom_qty, bom.product_uom)
             bom_components = bom_obj.bom_split(
-                cr, uid, bom, factor / bom.product_qty)
+                cr, uid, bom, factor)
+
 
             date_planned = self._get_date_planned(
                 cr, uid, order, line, order.date_order, context=context)

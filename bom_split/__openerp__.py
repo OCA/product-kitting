@@ -21,7 +21,7 @@
 
 {
     'name': 'BoMs Split',
-    'version': '1.0',
+    'version': '1.0.1',
     'category': 'Hidden',
     'description': """
 Technical module to allow the split of Bills of Materials.
@@ -30,9 +30,8 @@ Used in sale_bom_split and purchase_bom_split.
     'author': 'Camptocamp',
     'website': 'http://www.camptocamp.com',
     'depends': ['mrp'],
-    'init_xml': [],
-    'update_xml': [],
-    'demo_xml': [],
+    'data': [],
+    'demo': ['bom_split_demo.yml'],
     'installable': True,
     'autoinstall': False,
 }

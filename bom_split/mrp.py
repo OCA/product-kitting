@@ -28,7 +28,7 @@ class mrp_bom(Model):
     _inherit = 'mrp.bom'
 
     def _bom_split_vals(self, cr, uid, bom, factor, context=None):
-        product_obj = self.pool.get('product.product')
+        product_obj = self.pool['product.product']
         return {
             'name': product_obj.name_get(cr, uid, [bom.product_id.id])[0][1],
             'product_id': bom.product_id.id,
@@ -39,6 +39,10 @@ class mrp_bom(Model):
         }
 
     def bom_split(self, cr, uid, bom, factor, addthis=False, level=0):
+        """
+        split the bom into components.
+        factor is the quantity to produce  expressed in bom product_uom
+        """
         factor = factor / (bom.product_efficiency or 1.0)
         factor = rounding(factor, bom.product_rounding)
         if factor < bom.product_rounding:

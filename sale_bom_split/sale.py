@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-import netsvc
-from osv.orm import Model
+from openerp import netsvc
+from openerp.osv.orm import Model
 
 
 class sale_order(Model):
@@ -104,8 +104,7 @@ class sale_order(Model):
         # if we have at least one line which have to be split
         # we prepare the picking so we'll be able to bind it
         # to the move lines
-        picking_id = False
-        if bom_order_lines:
+        if bom_order_lines and not picking_id:
             picking_id = picking_obj.create(
                 cr, uid, self._prepare_order_picking(cr, uid, order, context=context))
 

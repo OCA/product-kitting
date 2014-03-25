@@ -21,7 +21,7 @@
 
 {
     'name': 'Sales BoMs Split',
-    'version': '1.0',
+    'version': '1.0.1',
     'category': 'Generic Modules/Sales & Purchases',
     'description': """
      This module splits the products into the related packing according to their

@@ -90,12 +90,13 @@ class product_product(orm.Model):
                     prod_min_quantities.append(prod_min_quantity)
                     if stop_compute_bom:
                         break
-            produced_qty = uom_obj._compute_qty_obj(cr, uid,
-                                                    bom.product_uom,
-                                                    bom.product_qty,
-                                                    bom.product_id.uom_id,
-                                                    context=context)
-            product_qty += min(prod_min_quantities) * produced_qty
+
+                produced_qty = uom_obj._compute_qty_obj(cr, uid,
+                                                        bom.product_uom,
+                                                        bom.product_qty,
+                                                        bom.product_id.uom_id,
+                                                        context=context)
+                product_qty += min(prod_min_quantities) * produced_qty
         return product_qty
 
     def _product_available(self, cr, uid, ids, field_names=None,

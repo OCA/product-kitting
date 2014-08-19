@@ -20,40 +20,19 @@
 ##############################################################################
 
 {
-    'name': 'Purchase BoMs split',
+    'name': 'BoMs Split',
     'version': '1.0.1',
-    'category': 'Generic Modules/Sales & Purchases',
+    'category': 'Hidden',
     'description': """
-     This module split the product into the related packing according
-     to their Bill of Material when validating a purchase order.
-
-     BoM Example structure:
-
-     Product A (fantom)
-        Product B (normal)
-            Product B1 (normal)
-            Product B2 (normal)
-        Product C (fantom)
-            Product C1 (normal)
-            Product C2 (normal)
-
-     With this module, purchase of Product A will result in a packing of :
-
-     Product B
-     Product C1
-     Product C2
-
-     Without it will result in a packing of :
-
-     Product A
+Technical module to allow the split of Bills of Materials.
+Used in sale_bom_split and purchase_bom_split.
     """,
     'author': 'Camptocamp',
     'website': 'http://www.camptocamp.com',
-    'depends': ['bom_split', 'purchase'],
+    'depends': ['mrp'],
     'data': [],
-    'demo': [],
-    'test': ['tests/test_purchase_bom_split.yml'],
-    'installable': True,
-    'auto_install': False,
+    'demo': ['bom_split_demo.yml'],
+    'installable': False,
+    'autoinstall': False,
 }
 

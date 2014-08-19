@@ -41,7 +41,7 @@
     'demo': [],
     'test': ['tests/test_bom_stock.yml',
              ],
-    'installable': True,
+    'installable': False,
     'active': False,
 }
 

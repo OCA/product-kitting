@@ -7,7 +7,9 @@
             <field name="inherit_id" ref="stock_available_immediately.view_normal_stock_active_qty_form"/>
             <field name="arch" type="xml">
                 <field name="immediately_usable_qty" position="after">
-                    <field name="bom_stock" />
+                    <field name="has_bom" invisible="1" />
+                    <field name="bom_stock"
+                        attrs="{'invisible': [('has_bom', '=', False)]}" />
                 </field>
             </field>
         </record>

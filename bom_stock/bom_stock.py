@@ -133,6 +133,17 @@ class product_product(orm.Model):
                         cr, uid, product, stock_qty, company, context=context)
         return res
 
+    def _has_bom(self, cr, uid, ids, field_names=None, arg=False,
+                 context=None):
+        bom_obj = self.pool['mrp.bom']
+        res = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            bom_id = bom_obj._bom_find(
+                cr, uid, product.id, product.uom_id.id, properties=[]
+            )
+            res[product.id] = bool(bom_id)
+        return res
+
     _columns = {
         'qty_available': fields.function(
             _product_available,
@@ -226,4 +237,10 @@ class product_product(orm.Model):
                  "how much could I produce of this product with the BoM"
                  "Components",
             multi='qty_available'),
+        'has_bom': fields.function(
+            _has_bom,
+            type='boolean',
+            string='Has a bill of material',
+            help='Tells if this product can be made from other products'
+        ),
         }

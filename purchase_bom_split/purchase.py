@@ -92,7 +92,8 @@ class purchase_order(Model):
 
         new_move_ids = []
         for line, bom in bom_order_lines:
-            factor = uom_obj._compute_qty_obj(cr, uid, line.product_uom, line.product_qty, bom.product_uom)
+            factor = uom_obj._compute_qty_obj(
+                cr, uid, line.product_uom, line.product_qty, bom.product_uom)
             bom_components = bom_obj.bom_split(
                 cr, uid, bom, factor)
 
@@ -116,10 +117,10 @@ class purchase_order(Model):
                     move_id = move_obj.create(cr, uid, vals, context=context)
                     new_move_ids.append(move_id)
             if move_dest_id:
-                line.move_dest_id.write({'location_id': move_dest_id.location_id.id})
+                line.move_dest_id.write(
+                    {'location_id': move_dest_id.location_id.id})
 
         move_obj.action_confirm(cr, uid, new_move_ids)
         move_obj.force_assign(cr, uid, new_move_ids)
         return super(purchase_order, self)._create_pickings(
             cr, uid, order, normal_order_lines, picking_id=picking_id, context=context)
-

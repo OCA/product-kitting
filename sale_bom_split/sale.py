@@ -110,10 +110,10 @@ class sale_order(Model):
 
         proc_ids = []
         for line, bom in bom_order_lines:
-            factor = uom_obj._compute_qty_obj(cr, uid, line.product_uom, line.product_uom_qty, bom.product_uom)
+            factor = uom_obj._compute_qty_obj(
+                cr, uid, line.product_uom, line.product_uom_qty, bom.product_uom)
             bom_components = bom_obj.bom_split(
                 cr, uid, bom, factor)
-
 
             date_planned = self._get_date_planned(
                 cr, uid, order, line, order.date_order, context=context)
@@ -148,14 +148,15 @@ class sale_order(Model):
             # to 1 procurement, so we link it with
             # the first procurement.
             line.write({'procurement_id': first_component[1]})
-            self.ship_recreate(cr, uid, order, line, first_component[0], first_component[1])
+            self.ship_recreate(
+                cr, uid, order, line, first_component[0], first_component[1])
 
         res = super(sale_order, self)._create_pickings_and_procurements(
             cr, uid, order, normal_order_lines, picking_id=picking_id, context=context)
 
         wf_service = netsvc.LocalService("workflow")
         for proc_id in proc_ids:
-            wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
+            wf_service.trg_validate(
+                uid, 'procurement.order', proc_id, 'button_confirm', cr)
 
         return res
-

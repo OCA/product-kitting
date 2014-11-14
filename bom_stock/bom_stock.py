@@ -31,14 +31,15 @@ class res_company(orm.Model):
              ('virtual', 'Virtual Stock'),
              ('immediately', 'Immediately Usable Stock')],
             'Reference Stock for BoM Stock')
-        }
+    }
 
     _defaults = {
         'ref_stock': 'real',
-        }
+    }
 
 
 class product_product(orm.Model):
+
     """
     Inherit Product in order to add a "BOM Stock" field
     """
@@ -70,7 +71,8 @@ class product_product(orm.Model):
                 # get the minimal number of items we can produce with them
                 for line in bom.bom_lines:
                     prod_min_quantity = 0.0
-                    bom_qty = line.product_id[stock_field] # expressed in product UOM
+                    # expressed in product UOM
+                    bom_qty = line.product_id[stock_field]
                     # the reference stock of the component must be greater
                     # than the quantity of components required to
                     # build the bom
@@ -80,7 +82,8 @@ class product_product(orm.Model):
                                                                 line.product_id.uom_id,
                                                                 context=context)
                     if bom_qty >= line_product_qty:
-                        prod_min_quantity = bom_qty / line_product_qty  # line.product_qty is always > 0
+                        # line.product_qty is always > 0
+                        prod_min_quantity = bom_qty / line_product_qty
                     else:
                         # if one product has not enough stock,
                         # we do not need to compute next lines
@@ -126,7 +129,6 @@ class product_product(orm.Model):
                     self._compute_bom_stock(
                         cr, uid, product, stock_qty, company, context=context)
         return res
-
 
     _columns = {
         'qty_available': fields.function(
@@ -206,7 +208,7 @@ class product_product(orm.Model):
             type='float',
             string='Immediately Usable',
             multi='qty_available',
-            help="Quantity of products really available for sale." \
+            help="Quantity of products really available for sale."
                  "Computed as: Quantity On Hand - Outgoing."),
         'bom_stock': fields.function(
             _product_available,
@@ -221,4 +223,4 @@ class product_product(orm.Model):
                  "how much could I produce of this product with the BoM"
                  "Components",
             multi='qty_available'),
-        }
+    }

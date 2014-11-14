@@ -58,7 +58,7 @@ class mrp_bom(Model):
                     cr, uid, self.browse(cr, uid, [newbom])[0],
                     factor * bom.product_qty,
                     addthis=True,
-                    level=level+10)
+                    level=level + 10)
                 phantom = True
             else:
                 phantom = False
@@ -74,4 +74,3 @@ class mrp_bom(Model):
                 result += self.bom_split(
                     cr, uid, bom2, factor, addthis=True, level=level + 10)
         return result
-

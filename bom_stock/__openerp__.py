@@ -23,7 +23,7 @@
     'version': '5.0.2',
     'category': 'Generic Modules/Others',
     'description':
-     """Compute the BOM  stock Value. BoM Stock Value are computed by:
+    """Compute the BOM  stock Value. BoM Stock Value are computed by:
       (`Reference stock` of `Product` + How much could I produce of that `Product` according to the component's `Reference Stock`)
 
       This reference stock can be chosen by company through a selection field

@@ -22,25 +22,26 @@
     'name': 'Compute Stock from BoM',
     'version': '5.0.2',
     'category': 'Generic Modules/Others',
-    'description':
-     """Compute the BOM  stock Value. BoM Stock Value are computed by:
-      (`Reference stock` of `Product` + How much could I produce of that `Product` according to the component's `Reference Stock`)
+    'description': """
+Compute the BOM  stock Value. BoM Stock Value are computed by:
+(`Reference stock` of `Product` + How much could I produce of that `Product`
+according to the component's `Reference Stock`)
 
-      This reference stock can be chosen by company through a selection field
-      and can be one of the available stock quantity computed in the system :
-      Available stock, Virtual stock, immediately_usable stock (from
-      stock_available_immediately)."""
-    ,
+This reference stock can be chosen by company through a selection field
+and can be one of the available stock quantity computed in the system :
+Available stock, Virtual stock, immediately_usable stock (from
+stock_available_immediately).
+    """,
     'author': 'Camptocamp',
     'website': 'http://www.camptocamp.com',
-    'depends': ['stock',
-                'mrp',
-                'stock_available_immediately',
-                ],
+    'depends': [
+        'stock',
+        'mrp',
+        'stock_available_immediately',
+    ],
     'data': ['bom_stock_view.xml'],
     'demo': [],
-    'test': ['tests/test_bom_stock.yml',
-             ],
+    'test': ['tests/test_bom_stock.yml'],
     'installable': True,
     'active': False,
 }

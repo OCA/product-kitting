@@ -85,12 +85,7 @@ class sale_order(Model):
         created if ommitted.
         :return: True
         """
-        move_obj = self.pool.get('stock.move')
         bom_obj = self.pool.get('mrp.bom')
-        picking_obj = self.pool.get('stock.picking')
-        product_obj = self.pool.get('product.product')
-        procurement_obj = self.pool.get('procurement.order')
-        uom_obj = self.pool['product.uom']
 
         bom_order_lines = []
         normal_order_lines = order_lines[:]
@@ -111,57 +106,14 @@ class sale_order(Model):
                 bom_order_lines.append((line, bom))
                 normal_order_lines.remove(line)
 
-        # if we have at least one line which have to be split
-        # we prepare the picking so we'll be able to bind it
-        # to the move lines
-        if bom_order_lines and not picking_id:
-            vals = self._prepare_order_picking(cr, uid, order, context=context)
-            picking_id = picking_obj.create(cr, uid, vals, context=context)
-
-        proc_ids = []
-        for line, bom in bom_order_lines:
-            factor = uom_obj._compute_qty_obj(cr, uid, line.product_uom,
-                                              line.product_uom_qty,
-                                              bom.product_uom)
-            bom_components = bom_obj.bom_split(
-                cr, uid, bom, factor)
-
-            date_planned = self._get_date_planned(
-                cr, uid, order, line, order.date_order, context=context)
-
-            first_component = None
-            for component in bom_components:
-                product = product_obj.browse(
-                    cr, uid, component['product_id'], context=context)
-                # do not create a move for service products
-                move_id = False
-                if product.type in ('product', 'consu'):
-                    vals = self._prepare_order_line_split_move(
-                        cr, uid,
-                        order,
-                        line,
-                        component,
-                        picking_id,
-                        date_planned,
-                        context=context)
-                    move_id = move_obj.create(cr, uid, vals, context=context)
-
-                proc_vals = self._prepare_order_line_split_procurement(
-                    cr, uid, order, line, component, move_id,
-                    date_planned, context=context)
-                proc_id = procurement_obj.create(
-                    cr, uid, proc_vals, context=context)
-
-                proc_ids.append(proc_id)
-                if first_component is None:
-                    first_component = (move_id, proc_id)
-
-            # The sale order line could be linked only
-            # to 1 procurement, so we link it with
-            # the first procurement.
-            line.write({'procurement_id': first_component[1]})
-            self.ship_recreate(cr, uid, order, line,
-                               first_component[0], first_component[1])
+        # If at least one move is required, a picking is created.
+        # We assign it in picking_id so it will be reused for the
+        # 'normal' lines
+        proc_ids, picking_id = self._create_components_moves_and_procurements(
+            cr, uid, order, bom_order_lines,
+            picking_id=picking_id,
+            context=context
+        )
 
         res = super(sale_order, self)._create_pickings_and_procurements(
             cr, uid, order, normal_order_lines,
@@ -173,3 +125,83 @@ class sale_order(Model):
                                     proc_id, 'button_confirm', cr)
 
         return res
+
+    def _create_components_moves_and_procurements(self, cr, uid, order,
+                                                  order_lines,
+                                                  picking_id=False,
+                                                  context=None):
+        uom_obj = self.pool['product.uom']
+        bom_obj = self.pool['mrp.bom']
+
+        proc_ids = []
+        for line, bom in order_lines:
+            factor = uom_obj._compute_qty_obj(cr, uid,
+                                              line.product_uom,
+                                              line.product_uom_qty,
+                                              bom.product_uom)
+            bom_components = bom_obj.bom_split(
+                cr, uid, bom, factor)
+
+            date_planned = self._get_date_planned(
+                cr, uid, order, line, order.date_order, context=context)
+
+            first_component = None
+            for component in bom_components:
+                create_component = self._create_component_move_and_procurement
+                move_id, proc_id, picking_id = create_component(
+                    cr, uid, order, line, component,
+                    date_planned, picking_id=picking_id, context=context
+                )
+                proc_ids.append(proc_id)
+                if first_component is None:
+                    first_component = (move_id, proc_id)
+
+            # The sale order line could be linked only
+            # to 1 procurement, so we link it with
+            # the first procurement.
+            line.write({'procurement_id': first_component[1]})
+            self.ship_recreate(cr, uid, order,
+                               line, first_component[0], first_component[1])
+        return proc_ids, picking_id
+
+    def _create_component_move_and_procurement(self, cr, uid, order,
+                                               order_line, component,
+                                               date_planned,
+                                               picking_id=False,
+                                               context=None):
+        product_obj = self.pool['product.product']
+        picking_obj = self.pool['stock.picking']
+        move_obj = self.pool['stock.move']
+        procurement_obj = self.pool['procurement.order']
+        product = product_obj.browse(cr, uid, component['product_id'],
+                                     context=context)
+        # do not create a move for service products
+        move_id = False
+        if product.type in ('product', 'consu'):
+            if not picking_id:
+                # the first time we have a move, we create a picking
+                # so we avoid to create a picking if no move is
+                # necessary
+                picking_vals = self._prepare_order_picking(cr, uid,
+                                                           order,
+                                                           context=context)
+                picking_id = picking_obj.create(cr, uid, picking_vals,
+                                                context=context)
+
+            vals = self._prepare_order_line_split_move(
+                cr, uid,
+                order,
+                order_line,
+                component,
+                picking_id,
+                date_planned,
+                context=context)
+            move_id = move_obj.create(cr, uid, vals, context=context)
+
+        proc_vals = self._prepare_order_line_split_procurement(
+            cr, uid, order, order_line, component,
+            move_id, date_planned, context=context
+        )
+        proc_id = procurement_obj.create(
+            cr, uid, proc_vals, context=context)
+        return move_id, proc_id, picking_id

@@ -29,12 +29,13 @@ class mrp_bom(Model):
 
     def _bom_split_vals(self, cr, uid, bom, factor, context=None):
         product_obj = self.pool['product.product']
+        uos_qty = bom.product_uos_qty * factor if bom.product_uos else False
         return {
             'name': product_obj.name_get(cr, uid, [bom.product_id.id])[0][1],
             'product_id': bom.product_id.id,
             'product_qty': bom.product_qty * factor,
             'product_uom': bom.product_uom.id,
-            'product_uos_qty': bom.product_uos and bom.product_uos_qty * factor or False,
+            'product_uos_qty': uos_qty,
             'product_uos': bom.product_uos and bom.product_uos.id or False,
         }
 
@@ -74,4 +75,3 @@ class mrp_bom(Model):
                 result += self.bom_split(
                     cr, uid, bom2, factor, addthis=True, level=level + 10)
         return result
-

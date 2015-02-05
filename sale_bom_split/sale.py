@@ -28,7 +28,8 @@ class sale_order(Model):
     _inherit = "sale.order"
 
     def _prepare_order_line_split_procurement(self, cr, uid, order, base_line,
-                                              component, move_id, date_planned, context=None):
+                                              component, move_id,
+                                              date_planned, context=None):
         vals = super(sale_order, self)._prepare_order_line_procurement(
             cr, uid, order, base_line, move_id, date_planned, context=context)
         vals.update({
@@ -41,9 +42,12 @@ class sale_order(Model):
         })
         return vals
 
-    def _prepare_order_line_split_move(self, cr, uid, order, base_line, component, picking_id, date_planned, context=None):
+    def _prepare_order_line_split_move(self, cr, uid, order, base_line,
+                                       component, picking_id, date_planned,
+                                       context=None):
         vals = super(sale_order, self)._prepare_order_line_move(
-            cr, uid, order, base_line, picking_id, date_planned, context=context)
+            cr, uid, order, base_line, picking_id,
+            date_planned, context=context)
         vals.update({
             'name': ("SO: %s" % component['name'])[:250],
             'product_id': component['product_id'],
@@ -54,25 +58,31 @@ class sale_order(Model):
         })
         return vals
 
-    def _create_pickings_and_procurements(self, cr, uid, order, order_lines, picking_id=False, context=None):
-        """Create the required procurements to supply sale order lines, also connecting
-        the procurements to appropriate stock moves in order to bring the goods to the
-        sale order's requested location.
+    def _create_pickings_and_procurements(self, cr, uid, order, order_lines,
+                                          picking_id=False, context=None):
+        """Create the required procurements to supply sale order lines,
+        also connecting the procurements to appropriate stock moves in
+        order to bring the goods to the sale order's requested location.
 
-        If ``picking_id`` is provided, the stock moves will be added to it, otherwise
-        a standard outgoing picking will be created to wrap the stock moves, as returned
-        by :meth:`~._prepare_order_picking`.
+        If ``picking_id`` is provided, the stock moves will be added to
+        it, otherwise a standard outgoing picking will be created to
+        wrap the stock moves, as returned by
+        :meth:`~._prepare_order_picking`.
 
-        Modules that wish to customize the procurements or partition the stock moves over
-        multiple stock pickings may override this method and call ``super()`` with
-        different subsets of ``order_lines`` and/or preset ``picking_id`` values.
+        Modules that wish to customize the procurements or partition the
+        stock moves over multiple stock pickings may override this
+        method and call ``super()`` with different subsets of
+        ``order_lines`` and/or preset ``picking_id`` values.
 
         Inherited in order to explode BoMs in many move lines in the picking.
 
-        :param browse_record order: sale order to which the order lines belong
-        :param list(browse_record) order_lines: sale order line records to procure
-        :param int picking_id: optional ID of a stock picking to which the created stock moves
-                               will be added. A new picking will be created if ommitted.
+        :param browse_record order: sale order to which the order lines
+        belong
+        :param list(browse_record) order_lines: sale order line records
+        to procure
+        :param int picking_id: optional ID of a stock picking to which
+        the created stock moves will be added. A new picking will be
+        created if ommitted.
         :return: True
         """
         move_obj = self.pool.get('stock.move')
@@ -105,15 +115,16 @@ class sale_order(Model):
         # we prepare the picking so we'll be able to bind it
         # to the move lines
         if bom_order_lines and not picking_id:
-            picking_id = picking_obj.create(
-                cr, uid, self._prepare_order_picking(cr, uid, order, context=context))
+            vals = self._prepare_order_picking(cr, uid, order, context=context)
+            picking_id = picking_obj.create(cr, uid, vals, context=context)
 
         proc_ids = []
         for line, bom in bom_order_lines:
-            factor = uom_obj._compute_qty_obj(cr, uid, line.product_uom, line.product_uom_qty, bom.product_uom)
+            factor = uom_obj._compute_qty_obj(cr, uid, line.product_uom,
+                                              line.product_uom_qty,
+                                              bom.product_uom)
             bom_components = bom_obj.bom_split(
                 cr, uid, bom, factor)
-
 
             date_planned = self._get_date_planned(
                 cr, uid, order, line, order.date_order, context=context)
@@ -136,7 +147,8 @@ class sale_order(Model):
                     move_id = move_obj.create(cr, uid, vals, context=context)
 
                 proc_vals = self._prepare_order_line_split_procurement(
-                    cr, uid, order, line, component, move_id, date_planned, context=context)
+                    cr, uid, order, line, component, move_id,
+                    date_planned, context=context)
                 proc_id = procurement_obj.create(
                     cr, uid, proc_vals, context=context)
 
@@ -148,14 +160,16 @@ class sale_order(Model):
             # to 1 procurement, so we link it with
             # the first procurement.
             line.write({'procurement_id': first_component[1]})
-            self.ship_recreate(cr, uid, order, line, first_component[0], first_component[1])
+            self.ship_recreate(cr, uid, order, line,
+                               first_component[0], first_component[1])
 
         res = super(sale_order, self)._create_pickings_and_procurements(
-            cr, uid, order, normal_order_lines, picking_id=picking_id, context=context)
+            cr, uid, order, normal_order_lines,
+            picking_id=picking_id, context=context)
 
         wf_service = netsvc.LocalService("workflow")
         for proc_id in proc_ids:
-            wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
+            wf_service.trg_validate(uid, 'procurement.order',
+                                    proc_id, 'button_confirm', cr)
 
         return res
-

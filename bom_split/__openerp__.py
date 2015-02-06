@@ -35,4 +35,3 @@ Used in sale_bom_split and purchase_bom_split.
     'installable': True,
     'autoinstall': False,
 }
-

@@ -24,8 +24,8 @@
     'version': '1.0.1',
     'category': 'Generic Modules/Sales & Purchases',
     'description': """
-     This module splits the products into the related packing according to their
-     Bill of Materials when validating a sale order.
+     This module splits the products into the related packing according
+     to their Bill of Materials when validating a sale order.
 
      BoM example structure:
 
@@ -58,4 +58,3 @@
     'installable': True,
     'auto_install': False,
 }
-

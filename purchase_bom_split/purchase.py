@@ -26,7 +26,8 @@ class purchase_order(Model):
 
     _inherit = "purchase.order"
 
-    def _prepare_order_line_split_move(self, cr, uid, order, base_line, component, picking_id, context=None):
+    def _prepare_order_line_split_move(self, cr, uid, order, base_line,
+                                       component, picking_id, context=None):
         vals = super(purchase_order, self)._prepare_order_line_move(
             cr, uid, order, base_line, picking_id, context=context)
         vals.update({
@@ -39,26 +40,33 @@ class purchase_order(Model):
         })
         return vals
 
-    def _create_pickings(self, cr, uid, order, order_lines, picking_id=False, context=None):
-        """Creates pickings and appropriate stock moves for given order lines, then
-        confirms the moves, makes them available, and confirms the picking.
+    def _create_pickings(self, cr, uid, order,
+                         order_lines, picking_id=False, context=None):
+        """Creates pickings and appropriate stock moves for given order
+        lines, then confirms the moves, makes them available, and
+        confirms the picking.
 
-        If ``picking_id`` is provided, the stock moves will be added to it, otherwise
-        a standard outgoing picking will be created to wrap the stock moves, as returned
-        by :meth:`~._prepare_order_picking`.
+        If ``picking_id`` is provided, the stock moves will be added to
+        it, otherwise a standard outgoing picking will be created to
+        wrap the stock moves, as returned by
+        :meth:`~._prepare_order_picking`.
 
-        Modules that wish to customize the procurements or partition the stock moves over
-        multiple stock pickings may override this method and call ``super()`` with
-        different subsets of ``order_lines`` and/or preset ``picking_id`` values.
+        Modules that wish to customize the procurements or partition the
+        stock moves over multiple stock pickings may override this
+        method and call ``super()`` with different subsets of
+        ``order_lines`` and/or preset ``picking_id`` values.
 
         Inherited in order to explode BoMs in many move lines in the picking.
 
-        :param browse_record order: purchase order to which the order lines belong
-        :param list(browse_record) order_lines: purchase order line records for which picking
-                                                and moves should be created.
-        :param int picking_id: optional ID of a stock picking to which the created stock moves
-                               will be added. A new picking will be created if omitted.
-        :return: list of IDs of pickings used/created for the given order lines (usually just one)
+        :param browse_record order: purchase order to which the order
+        lines belong
+        :param list(browse_record) order_lines: purchase order line
+        records for which picking and moves should be created.
+        :param int picking_id: optional ID of a stock picking to which
+        the created stock moves will be added. A new picking will be
+        created if omitted.
+        :return: list of IDs of pickings used/created for the given
+        order lines (usually just one)
         """
         move_obj = self.pool.get('stock.move')
         bom_obj = self.pool.get('mrp.bom')
@@ -87,12 +95,14 @@ class purchase_order(Model):
         # to the move lines
         picking_id = False
         if bom_order_lines:
-            picking_id = picking_obj.create(
-                cr, uid, self._prepare_order_picking(cr, uid, order, context=context))
+            vals = self._prepare_order_picking(cr, uid, order, context=context)
+            picking_id = picking_obj.create(cr, uid, vals, context=context)
 
         new_move_ids = []
         for line, bom in bom_order_lines:
-            factor = uom_obj._compute_qty_obj(cr, uid, line.product_uom, line.product_qty, bom.product_uom)
+            factor = uom_obj._compute_qty_obj(cr, uid, line.product_uom,
+                                              line.product_qty,
+                                              bom.product_uom)
             bom_components = bom_obj.bom_split(
                 cr, uid, bom, factor)
 
@@ -116,10 +126,12 @@ class purchase_order(Model):
                     move_id = move_obj.create(cr, uid, vals, context=context)
                     new_move_ids.append(move_id)
             if move_dest_id:
-                line.move_dest_id.write({'location_id': move_dest_id.location_id.id})
+                line.move_dest_id.write({
+                    'location_id': move_dest_id.location_id.id,
+                })
 
         move_obj.action_confirm(cr, uid, new_move_ids)
         move_obj.force_assign(cr, uid, new_move_ids)
         return super(purchase_order, self)._create_pickings(
-            cr, uid, order, normal_order_lines, picking_id=picking_id, context=context)
-
+            cr, uid, order, normal_order_lines,
+            picking_id=picking_id, context=context)

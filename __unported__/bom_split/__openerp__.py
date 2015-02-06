@@ -29,6 +29,7 @@ Used in sale_bom_split and purchase_bom_split.
     """,
     'author': 'Camptocamp',
     'website': 'http://www.camptocamp.com',
+    'license': 'AGPL-3',
     'depends': ['mrp'],
     'data': [],
     'demo': ['bom_split_demo.yml'],

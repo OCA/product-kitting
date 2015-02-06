@@ -50,6 +50,7 @@
     """,
     'author': 'Camptocamp',
     'website': 'http://www.camptocamp.com',
+    'license': 'AGPL-3',
     'depends': ['sale', 'bom_split'],
     'data': [],
     'demo': [],

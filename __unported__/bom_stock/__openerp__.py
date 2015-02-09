@@ -33,6 +33,7 @@
     ,
     'author': 'Camptocamp',
     'website': 'http://www.camptocamp.com',
+    'license': 'GPL-3 or any later version',
     'depends': ['stock',
                 'mrp',
                 'stock_available_immediately',

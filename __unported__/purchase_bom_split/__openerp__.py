@@ -49,6 +49,7 @@
     """,
     'author': 'Camptocamp',
     'website': 'http://www.camptocamp.com',
+    'license': 'AGPL-3',
     'depends': ['bom_split', 'purchase'],
     'data': [],
     'demo': [],

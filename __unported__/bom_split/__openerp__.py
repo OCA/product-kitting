@@ -27,7 +27,7 @@
 Technical module to allow the split of Bills of Materials.
 Used in sale_bom_split and purchase_bom_split.
     """,
-    'author': 'Camptocamp',
+    'author': "Camptocamp,Odoo Community Association (OCA)",
     'website': 'http://www.camptocamp.com',
     'license': 'AGPL-3',
     'depends': ['mrp'],

@@ -34,15 +34,18 @@
     'author': "Camptocamp,Odoo Community Association (OCA)",
     'website': 'http://www.camptocamp.com',
     'license': 'GPL-3 or any later version',
-    'depends': ['stock',
+    'depends': ['stock','base',
                 'mrp',
-                'stock_available_immediately',
+                'ursa_stock_sellable_qty',
                 ],
-    'data': ['bom_stock_view.xml'],
+    'data': [
+                 #'bom_stock_view.xml'
+            ],
     'demo': [],
-    'test': ['tests/test_bom_stock.yml',
+    'test': [
+               # 'tests/test_bom_stock.yml',
              ],
-    'installable': False,
+    'installable': True,
     'active': False,
 }
 

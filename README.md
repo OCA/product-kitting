@@ -17,9 +17,9 @@ Unported addons
 ---------------
 addon | version | summary
 --- | --- | ---
-[bom_split](__unported__/bom_split/) | 1.0.1 (unported) | BoMs Split
-[bom_stock](__unported__/bom_stock/) | 5.0.2 (unported) | Compute Stock from BoM
-[purchase_bom_split](__unported__/purchase_bom_split/) | 1.0.1 (unported) | Purchase BoMs split
-[sale_bom_split](__unported__/sale_bom_split/) | 1.0.1 (unported) | Sales BoMs Split
+[bom_split](bom_split/) | 1.0.1 (unported) | BoMs Split
+[bom_stock](bom_stock/) | 5.0.2 (unported) | Compute Stock from BoM
+[purchase_bom_split](purchase_bom_split/) | 1.0.1 (unported) | Purchase BoMs split
+[sale_bom_split](sale_bom_split/) | 1.0.1 (unported) | Sales BoMs Split
 
 [//]: # (end addons)

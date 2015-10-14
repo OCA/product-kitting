@@ -13,4 +13,13 @@ This project deals with modules related to product kitting management. You'll fi
  - ...
 
 [//]: # (addons)
+Unported addons
+---------------
+addon | version | summary
+--- | --- | ---
+[bom_split](bom_split/) | 1.0.1 (unported) | BoMs Split
+[bom_stock](bom_stock/) | 5.0.2 (unported) | Compute Stock from BoM
+[purchase_bom_split](purchase_bom_split/) | 1.0.1 (unported) | Purchase BoMs split
+[sale_bom_split](sale_bom_split/) | 1.0.1 (unported) | Sales BoMs Split
+
 [//]: # (end addons)

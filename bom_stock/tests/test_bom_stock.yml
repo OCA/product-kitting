@@ -4,23 +4,22 @@
   !record {model: product.product, id: product1}:
     name: Pipe
     type: product
-    supply_method: buy
 -
   I create a product "Half Pipe"
 -
   !record {model: product.product, id: product2}:
     name: Half Pipe
     type: product
-    supply_method: produce
 -
   I explain how to build Half Pipes
 -
   !record {model: mrp.bom, id: bom_prod2}:
     name: half pipe
     product_id: product2
+    product_tmpl_id: product2_product_template
     product_qty: 2
     product_uom: product.product_uom_dozen
-    bom_lines:
+    bom_line_ids:
       - product_id: product1
         product_qty: 1
         product_uom: product.product_uom_dozen
@@ -29,7 +28,8 @@
 -
   !record {model: stock.move, id: move1}:
     product_id: product1
-    product_qty: 12
+    product_tmpl_id: product1_product_template
+    product_uom_qty: 12
     product_uom: product.product_uom_unit
     location_id: stock.location_inventory
     location_dest_id: stock.stock_location_stock
@@ -38,7 +38,7 @@
 -
   !record {model: stock.move, id: move2}:
     product_id: product2
-    product_qty: 1
+    product_uom_qty: 1
     product_uom: product.product_uom_unit
     location_id: stock.location_inventory
     location_dest_id: stock.stock_location_stock

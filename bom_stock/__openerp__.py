@@ -1,49 +1,31 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    Copyright Camptocamp SA
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# © 2015 Camptocamp SA, Sodexis
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
-    'name': 'Compute Stock from BoM',
-    'version': '5.0.2',
-    'category': 'Generic Modules/Others',
-    'description':
-     """Compute the BOM  stock Value. BoM Stock Value are computed by:
-      (`Reference stock` of `Product` + How much could I produce of that `Product` according to the component's `Reference Stock`)
-
-      This reference stock can be chosen by company through a selection field
-      and can be one of the available stock quantity computed in the system :
-      Available stock, Virtual stock, immediately_usable stock (from
-      stock_available_immediately)."""
-    ,
-    'author': "Camptocamp,Odoo Community Association (OCA)",
-    'website': 'http://www.camptocamp.com',
-    'license': 'GPL-3 or any later version',
-    'depends': ['stock',
-                'mrp',
-                'stock_available_immediately',
-                ],
-    'data': ['bom_stock_view.xml'],
-    'demo': [],
-    'test': ['tests/test_bom_stock.yml',
-             ],
-    'installable': False,
-    'active': False,
+    "name": "Compute Stock from BoM",
+    "summary": "Compute Product Stock from its Bill of Material",
+    "version": "8.0.1.0.0",
+    "category": "Manufacturing",
+    "website": "https://odoo-community.org/",
+    "author": "Camptocamp SA, Sodexis, Odoo Community Association (OCA)",
+    "license": "AGPL-3",
+    "application": False,
+    "installable": True,
+    "depends": [
+        "base",
+        'delivery',
+        'mrp',
+        'stock_available_immediately',
+    ],
+    "data": [
+        "views/product_template_view.xml",
+        "views/res_company_view.xml"
+    ],
+    "test": [
+        'tests/test_bom_stock.yml',
+    ],
+    'images': [
+        'images/bom_stock.png'
+    ],
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

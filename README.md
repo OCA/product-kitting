@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/OCA/product-kitting.svg?branch=9.0)](https://travis-ci.org/OCA/product-kitting)
-[![Coverage Status](https://coveralls.io/repos/OCA/product-kitting/badge.png?branch=9.0)](https://coveralls.io/r/OCA/product-kitting?branch=9.0)
+[![Build Status](https://travis-ci.org/OCA/product-kitting.svg?branch=10.0)](https://travis-ci.org/OCA/product-kitting)
+[![Coverage Status](https://coveralls.io/repos/OCA/product-kitting/badge.png?branch=10.0)](https://coveralls.io/r/OCA/product-kitting?branch=10.0)
 
 Product Kitting
 ===============

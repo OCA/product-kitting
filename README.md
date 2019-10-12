@@ -11,5 +11,3 @@ This project deals with modules related to product kitting management. You'll fi
  - Split the delivery related to a SO (based on BoM)
  - Split the reception related to a PO (based on BoM)
  - ...
-
-

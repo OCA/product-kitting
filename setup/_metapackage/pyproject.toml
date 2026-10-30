@@ -1,0 +1,11 @@
+[project]
+name = "odoo-addons-oca-product-kitting"
+version = "18.0.20261030.0"
+dependencies = [
+    "odoo-addon-mrp_kit_product_logistics_computation==18.0.*",
+]
+classifiers=[
+    "Programming Language :: Python",
+    "Framework :: Odoo",
+    "Framework :: Odoo :: 18.0",
+]
